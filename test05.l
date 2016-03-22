@@ -27,11 +27,11 @@ int line;
 ("\"")[a-zA-Z0-9]*("\"")	{ yylval.str = strdup(yytext); return MSG; }
 [0-9]+					{ yylval.val = atoi(yytext); return NUMBER; }
 "0x"[0-9a-f]+			{ yylval.val = hexToDecimal(yytext); ;return NUMBER; }
-[_a-zA-Z][_a-zA-Z0-9]*	{ yylval.str = strdup(yytext); printf("%s\n", "variable"); return VARIABLE; }
+[_a-zA-Z][_a-zA-Z0-9]*	{ yylval.str = strdup(yytext); return VARIABLE; }
 [-+()*/\\]		{ return *yytext; }
 [=]				{ return ASSIGN; }
 [;]				{ return SEMICOLON; }
-[_a-zA-Z0-9]+	{ printf("%s\n", "text");return TEXT; }
+[_a-zA-Z0-9]+	{ return TEXT; }
 
 
 [\n]			{line++;}
