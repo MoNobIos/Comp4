@@ -6,6 +6,7 @@
 
 int hexToDecimal(char* hex);
 int pow(int base,int n);
+void errorMunch();
 
 int line;
 %}
@@ -25,15 +26,17 @@ int line;
 
 ("\"")[a-zA-Z0-9]*("\"")	{ yylval.str = strdup(yytext); return MSG; }
 [0-9]+					{ yylval.val = atoi(yytext); return NUMBER; }
-"0x"[0-9a-f]+			{ yylval.val = hexToDecimal(yytext); return NUMBER; }
-[_a-zA-Z][_a-zA-Z0-9]*	{ yylval.str = strdup(yytext); return VARIABLE; }
+"0x"[0-9a-f]+			{ yylval.val = hexToDecimal(yytext); ;return NUMBER; }
+[_a-zA-Z][_a-zA-Z0-9]*	{ yylval.str = strdup(yytext); printf("%s\n", "variable"); return VARIABLE; }
 [-+()*/\\]		{ return *yytext; }
 [=]				{ return ASSIGN; }
 [;]				{ return SEMICOLON; }
+[_a-zA-Z0-9]+	{ printf("%s\n", "text");return TEXT; }
+
 
 [\n]			{line++;}
 [ \t\f\v]		; /* ignore */
-.				yyerror("invalid character");
+.				{ errorMunch(); return ERR; }
 
 %%
 
@@ -60,6 +63,11 @@ int hexToDecimal(char* hex){ /* base 16 to base 10 */
 int pow(int base,int n){
 	if(n == 0) return 1;
 	else return base * pow(base,n-1);
+}
+
+void errorMunch()
+{
+	while (input() != '\n');
 }
 
 int yywrap(){

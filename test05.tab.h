@@ -54,12 +54,14 @@ extern int yydebug;
     ELSE = 264,
     PRINT = 265,
     MSG = 266,
-    GREAT = 267,
-    LESS = 268,
-    EQ = 269,
-    NEQ = 270,
-    UMINUS = 271,
-    IFX = 272
+    ERR = 267,
+    TEXT = 268,
+    GREAT = 269,
+    LESS = 270,
+    EQ = 271,
+    NEQ = 272,
+    UMINUS = 273,
+    IFX = 274
   };
 #endif
 
@@ -73,7 +75,7 @@ union YYSTYPE
 	int val;
 	char *str;
 
-#line 77 "test05.tab.h" /* yacc.c:1909  */
+#line 79 "test05.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

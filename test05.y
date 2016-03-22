@@ -1,10 +1,10 @@
 %{
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
+//#define YYSTYPE int
 #define TOP 25
-
 extern int yylex();
 
 
@@ -14,7 +14,7 @@ struct var{
 	int val;
 };
 
-void yyerror(char* msg);
+void yyerror();
 void updateVariable(char *name,int val);
 int getVar(char *name);
 
@@ -37,40 +37,44 @@ int top=-1;
 %token ELSE
 %token PRINT
 %token MSG
+%token ERR
+%token TEXT
 
 %left GREAT LESS EQ NEQ
-%left '+' '-' 
+%left '+' '-'
 %left '*' '/' '\\'
 %nonassoc UMINUS
 %nonassoc IFX
 %nonassoc ELSE
 
-%type<val> expression condition statement
-%type<str> VARIABLE MSG
-
+%type<val> expression statement condition
+%type<str> MSG VARIABLE
 
 %%
 
-prog : statement							{}	
+prog : statement							{}
 	| prog statement						{}
 	;
 
 statement :	expression SEMICOLON				{ $$ = $1; printf("%d\n",$1); }
-
-	| IF '(' condition ')' statement %prec IFX	{ printf("OK");}
-	| IF '(' condition ')' statement ELSE statement {}
-	| IF '(' condition ')' statement ELSE '{' statement '}' {}
-	| IF '(' condition ')' '{' statement '}' %prec IFX	{}
-	| IF '(' condition ')' '{' statement '}' ELSE statement {}
-	| IF '(' condition ')' '{' statement '}' ELSE '{' statement '}' {printf("ok\n");}
+	| IF '(' condition ')' else_part	{ printf("go to else_part\n"); }
 	| WHILE '(' condition ')' '{' statement '}'		{}
 	| WHILE '(' condition ')' statement		{}
-	| PRINT MSG SEMICOLON		{printf("%s",(char*)$2); }
+
+	| PRINT MSG SEMICOLON		{ printf("%s",(char*)$2); }
 	| PRINT expression SEMICOLON { printf("%d",$2); }
 	| VARIABLE ASSIGN expression SEMICOLON				{ updateVariable((char*)$1,$3); }
 	;
 
+else_part : statement else_st		{ }
+	| '{' statement '}' else_st 		{ }
+	| %prec IFX {printf("statement has lost\n");}
+	| TEXT					{ printf("text errors\n"); }
+	;
 
+else_st : %prec IFX	{ printf("OK\n");}
+  | ELSE statement { printf("OK\n"); }
+	| ELSE '{' statement '}' {printf("OK\n");}
 
 expression : expression '+' expression	{ $$ = $1 + $3; }
 	| expression '-' expression 		{ $$ = $1 - $3; }
@@ -79,7 +83,7 @@ expression : expression '+' expression	{ $$ = $1 + $3; }
 	| expression '\\' expression 		{ $$ = $1 % $3; }
 	| '-' expression %prec UMINUS		{ $$ = -$2; }
 	| '(' expression ')'				{ $$ = $2; }
-	| NUMBER							{}
+	| NUMBER										{ }
 	| VARIABLE 							{ $$ = getVar((char*)$1);}
 	;
 
@@ -87,14 +91,15 @@ condition : expression EQ expression  	{ printf("%d\n",$1==$3); }
 	| expression GREAT expression  { printf("%d\n",$1>$3); }
 	| expression LESS expression  { printf("%d\n",$1<$3); }
 	| expression NEQ expression  { printf("%d\n",$1<$3); }
+	| TEXT	{ printf("%s\n", "condition has lost"); yyerror();}
 	;
+
 
 %%
 
 /*  syntax error */
-void yyerror(char* msg){
-	printf("syntax error\n");
-	exit(1);
+void yyerror(){
+	printf("error has occured\n");
 }
 
 void updateVariable(char *name,int val){
@@ -120,7 +125,7 @@ int getVar(char *name){
 		if(strcmp(name,myVar[i].name)==0) return myVar[i].val;
 	}
 	printf("var %s is valid\n",name);
-	exit(1);
+	//exit(1);
 	return 0;
 }
 
