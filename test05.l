@@ -20,23 +20,23 @@ int line;
 
 "=="					{ return EQ; }
 "!="					{ return NEQ; }
-">"						{ return GREAT; }
-"<"						{ return LESS; }
+">"					{ return GREAT; }
+"<"					{ return LESS; }
 ("{"|"}")				{ return *yytext; }
 
-("\"")[a-zA-Z0-9]*("\"")	{ yylval.str = strdup(yytext); return MSG; }
+("\"")[a-zA-Z0-9]*("\"")		{ yylval.str = strdup(yytext); return MSG; }
 [0-9]+					{ yylval.val = atoi(yytext); return NUMBER; }
-"0x"[0-9a-f]+			{ yylval.val = hexToDecimal(yytext); ;return NUMBER; }
-[_a-zA-Z][_a-zA-Z0-9]*	{ yylval.str = strdup(yytext); return VARIABLE; }
-[-+()*/\\]		{ return *yytext; }
-[=]				{ return ASSIGN; }
-[;]				{ return SEMICOLON; }
-[_a-zA-Z0-9]+	{ return TEXT; }
+"0x"[0-9a-f]+				{ yylval.val = hexToDecimal(yytext); ;return NUMBER; }
+[_a-zA-Z][_a-zA-Z0-9]*			{ yylval.str = strdup(yytext); return VARIABLE; }
+[-+()*/\\]				{ return *yytext; }
+[=]					{ return ASSIGN; }
+[;]					{ return SEMICOLON; }
+[_a-zA-Z0-9]+				{ return TEXT; }
 
 
-[\n]			{line++;}
-[ \t\f\v]		; /* ignore */
-.				{ errorMunch(); return ERR; }
+[\n]					{line++;}
+[ \t\f\v]				; /* ignore */
+.					{ errorMunch(); return ERR; }
 
 %%
 
