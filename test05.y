@@ -1,10 +1,10 @@
 %{
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-//#define YYSTYPE int
 #define TOP 25
+
 extern int yylex();
 
 
@@ -40,6 +40,7 @@ int top=-1;
 %token ERR
 %token TEXT
 
+
 %left GREAT LESS EQ NEQ
 %left '+' '-'
 %left '*' '/' '\\'
@@ -47,8 +48,9 @@ int top=-1;
 %nonassoc IFX
 %nonassoc ELSE
 
-%type<val> expression statement condition
-%type<str> MSG VARIABLE
+%type<val> expression condition statement
+%type<str> VARIABLE MSG
+
 
 %%
 
@@ -57,24 +59,19 @@ prog : statement							{}
 	;
 
 statement :	expression SEMICOLON				{ $$ = $1; printf("%d\n",$1); }
-	| IF '(' condition ')' else_part	{ printf("go to else_part\n"); }
-	| WHILE '(' condition ')' '{' statement '}'		{}
-	| WHILE '(' condition ')' statement		{}
-
-	| PRINT MSG SEMICOLON		{ printf("%s",(char*)$2); }
+	| IF '(' condition ')' statement %prec IFX	{ printf("IF '(' condition ')' statement\n");}
+	| IF '(' condition ')' statement ELSE statement { printf("IF '(' condition ')' statement ELSE statement\n");}
+	| IF '(' condition ')' statement ELSE '{' statement '}' { printf("IF '(' condition ')' statement ELSE '{' statement '}'\n");}
+	| IF '(' condition ')' '{' statement '}' %prec IFX	{printf("IF '(' condition ')' '{' statement '}'\n");}
+	| IF '(' condition ')' '{' statement '}' ELSE statement {printf("IF '(' condition ')' '{' statement '}' ELSE statement\n");}
+	| IF '(' condition ')' '{' statement '}' ELSE '{' statement '}' {printf("IF '(' condition ')' '{' statement '}' ELSE '{' statement '}'\n");}
+	| WHILE '(' condition ')' '{' statement '}'		{printf("WHILE '(' condition ')' '{' statement '}'\n");}
+	| WHILE '(' condition ')' statement		{printf("WHILE '(' condition ')' statement\n");}
+	| PRINT MSG SEMICOLON		{printf("%s",(char*)$2); }
 	| PRINT expression SEMICOLON { printf("%d",$2); }
 	| VARIABLE ASSIGN expression SEMICOLON				{ updateVariable((char*)$1,$3); }
+	| error { yyerror(); }
 	;
-
-else_part : statement else_st		{ }
-	| '{' statement '}' else_st 		{ }
-	| %prec IFX {printf("statement has lost\n");}
-	| TEXT					{ printf("text errors\n"); }
-	;
-
-else_st : %prec IFX	{ printf("OK\n");}
-  | ELSE statement { printf("OK\n"); }
-	| ELSE '{' statement '}' {printf("OK\n");}
 
 expression : expression '+' expression	{ $$ = $1 + $3; }
 	| expression '-' expression 		{ $$ = $1 - $3; }
@@ -83,7 +80,7 @@ expression : expression '+' expression	{ $$ = $1 + $3; }
 	| expression '\\' expression 		{ $$ = $1 % $3; }
 	| '-' expression %prec UMINUS		{ $$ = -$2; }
 	| '(' expression ')'				{ $$ = $2; }
-	| NUMBER										{ }
+	| NUMBER							{}
 	| VARIABLE 							{ $$ = getVar((char*)$1);}
 	;
 
@@ -91,9 +88,7 @@ condition : expression EQ expression  	{ printf("%d\n",$1==$3); }
 	| expression GREAT expression  { printf("%d\n",$1>$3); }
 	| expression LESS expression  { printf("%d\n",$1<$3); }
 	| expression NEQ expression  { printf("%d\n",$1<$3); }
-	| TEXT	{ printf("%s\n", "condition has lost"); yyerror();}
 	;
-
 
 %%
 
@@ -125,7 +120,6 @@ int getVar(char *name){
 		if(strcmp(name,myVar[i].name)==0) return myVar[i].val;
 	}
 	printf("var %s is valid\n",name);
-	//exit(1);
 	return 0;
 }
 

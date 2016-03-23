@@ -836,7 +836,7 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 #line 30 "test05.l"
-{ yylval.str = strdup(yytext); printf("%s\n", "variable"); return VARIABLE; }
+{ yylval.str = strdup(yytext); return VARIABLE; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
@@ -856,7 +856,7 @@ YY_RULE_SETUP
 case 17:
 YY_RULE_SETUP
 #line 34 "test05.l"
-{ printf("%s\n", "text");return TEXT; }
+{ return TEXT; }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
