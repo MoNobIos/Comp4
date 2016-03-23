@@ -58,36 +58,33 @@ prog : statement							{}
 	| prog statement						{}
 	;
 
-statement :	expression SEMICOLON				{ $$ = $1; printf("%d\n",$1); }
-	| IF '(' condition ')' statement %prec IFX	{ printf("IF '(' condition ')' statement\n");}
-	| IF '(' condition ')' statement ELSE statement { printf("IF '(' condition ')' statement ELSE statement\n");}
-	| IF '(' condition ')' statement ELSE '{' statement '}' { printf("IF '(' condition ')' statement ELSE '{' statement '}'\n");}
-	| IF '(' condition ')' '{' statement '}' %prec IFX	{printf("IF '(' condition ')' '{' statement '}'\n");}
-	| IF '(' condition ')' '{' statement '}' ELSE statement {printf("IF '(' condition ')' '{' statement '}' ELSE statement\n");}
-	| IF '(' condition ')' '{' statement '}' ELSE '{' statement '}' {printf("IF '(' condition ')' '{' statement '}' ELSE '{' statement '}'\n");}
-	| WHILE '(' condition ')' '{' statement '}'		{printf("WHILE '(' condition ')' '{' statement '}'\n");}
-	| WHILE '(' condition ')' statement		{printf("WHILE '(' condition ')' statement\n");}
-	| PRINT MSG SEMICOLON		{printf("%s",(char*)$2); }
-	| PRINT expression SEMICOLON { printf("%d",$2); }
+statement :	expression SEMICOLON					{ $$ = $1; printf("%d\n",$1); }
+	| IF '(' condition ')' statement %prec IFX			{ printf("IF '(' condition ')' statement\n");}
+	| IF '(' condition ')' statement ELSE statement 		{ printf("IF '(' condition ')' statement ELSE statement\n");}
+	| IF '(' condition ')' statement ELSE '{' statement '}' 	{ printf("IF '(' condition ')' statement ELSE '{' statement '}'\n");}
+	| IF '(' condition ')' '{' statement '}' %prec IFX		{ printf("IF '(' condition ')' '{' statement '}'\n");}
+	| IF '(' condition ')' '{' statement '}' ELSE statement 	{ printf("IF '(' condition ')' '{' statement '}' ELSE statement\n");}
+	| IF '(' condition ')' '{' statement '}' ELSE '{' statement '}' { printf("IF '(' condition ')' '{' statement '}' ELSE '{' statement '}'\n");}
+	| WHILE '(' condition ')' '{' statement '}'			{ printf("WHILE '(' condition ')' '{' statement '}'\n");}
+	| WHILE '(' condition ')' statement				{ printf("WHILE '(' condition ')' statement\n");}
+	| PRINT MSG SEMICOLON						{ printf("%s",(char*)$2); }
+	| PRINT expression SEMICOLON 					{ printf("%d",$2); }
 	| VARIABLE ASSIGN expression SEMICOLON				{ updateVariable((char*)$1,$3); }
-	| error { yyerror(); }
+	| error 							{ yyerror(); }
 	;
 
-expression : expression '+' expression	{ $$ = $1 + $3; }
+expression : expression '+' expression		{ $$ = $1 + $3; }
 	| expression '-' expression 		{ $$ = $1 - $3; }
 	| expression '*' expression 		{ $$ = $1 * $3; }
 	| expression '/' expression 		{ $$ = $1 / $3; }
 	| expression '\\' expression 		{ $$ = $1 % $3; }
 	| '-' expression %prec UMINUS		{ $$ = -$2; }
-	| '(' expression ')'				{ $$ = $2; }
-	| NUMBER							{}
-	| VARIABLE 							{ $$ = getVar((char*)$1);}
+	| '(' expression ')'			{ $$ = $2; }
+	| NUMBER				{}
+	| VARIABLE 				{ $$ = getVar((char*)$1);}
 	;
 
 condition : expression EQ expression  	{ printf("%d\n",$1==$3); }
-	| expression GREAT expression  { printf("%d\n",$1>$3); }
-	| expression LESS expression  { printf("%d\n",$1<$3); }
-	| expression NEQ expression  { printf("%d\n",$1<$3); }
 	;
 
 %%
