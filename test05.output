@@ -1,0 +1,912 @@
+Terminals unused in grammar
+
+   ERR
+   GREAT
+   NEQ
+
+
+State 11 conflicts: 3 shift/reduce
+State 25 conflicts: 3 shift/reduce
+
+
+Grammar
+
+    0 $accept: prog $end
+
+    1 prog: statement
+    2     | prog statement
+
+    3 statement: expression SEMICOLON
+    4          | IF '(' expression EQ expression ')' '{' group_command '}'
+    5          | IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}'
+    6          | WHILE '(' expression LESS expression ')' '{' statement '}'
+    7          | group_command
+    8          | error
+
+    9 group_command: command
+   10              | statement command
+
+   11 command: PRINT MSG SEMICOLON
+   12        | PRINT MSG NEWLINE SEMICOLON
+   13        | PRINT expression SEMICOLON
+   14        | PRINT expression NEWLINE SEMICOLON
+   15        | PRINT_HEX expression SEMICOLON
+   16        | PRINT_HEX expression NEWLINE SEMICOLON
+   17        | VARIABLE ASSIGN expression SEMICOLON
+
+   18 expression: expression '+' expression
+   19           | expression '-' expression
+   20           | expression '*' expression
+   21           | expression '/' expression
+   22           | expression '\\' expression
+   23           | '-' expression
+   24           | '(' expression ')'
+   25           | NUMBER
+   26           | VARIABLE
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 4 5 6 24
+')' (41) 4 5 6 24
+'*' (42) 20
+'+' (43) 18
+'-' (45) 19 23
+'/' (47) 21
+'\\' (92) 22
+'{' (123) 4 5 6
+'}' (125) 4 5 6
+error (256) 8
+NUMBER (258) 25
+SEMICOLON (259) 3 11 12 13 14 15 16 17
+VARIABLE (260) 17 26
+ASSIGN (261) 17
+WHILE (262) 6
+IF (263) 4 5
+ELSE (264) 5
+PRINT (265) 11 12 13 14
+MSG (266) 11 12
+ERR (267)
+NEWLINE (268) 12 14 16
+PRINT_HEX (269) 15 16
+GREAT (270)
+LESS (271) 6
+EQ (272) 4 5
+NEQ (273)
+UMINUS (274)
+IFX (275)
+
+
+Nonterminals, with rules where they appear
+
+$accept (30)
+    on left: 0
+prog (31)
+    on left: 1 2, on right: 0 2
+statement (32)
+    on left: 3 4 5 6 7 8, on right: 1 2 6 10
+group_command (33)
+    on left: 9 10, on right: 4 5 7
+command (34)
+    on left: 11 12 13 14 15 16 17, on right: 9 10
+expression (35)
+    on left: 18 19 20 21 22 23 24 25 26, on right: 3 4 5 6 13 14 15
+    16 17 18 19 20 21 22 23 24
+
+
+State 0
+
+    0 $accept: . prog $end
+
+    error      shift, and go to state 1
+    NUMBER     shift, and go to state 2
+    VARIABLE   shift, and go to state 3
+    WHILE      shift, and go to state 4
+    IF         shift, and go to state 5
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+    '-'        shift, and go to state 8
+    '('        shift, and go to state 9
+
+    prog           go to state 10
+    statement      go to state 11
+    group_command  go to state 12
+    command        go to state 13
+    expression     go to state 14
+
+
+State 1
+
+    8 statement: error .
+
+    $default  reduce using rule 8 (statement)
+
+
+State 2
+
+   25 expression: NUMBER .
+
+    $default  reduce using rule 25 (expression)
+
+
+State 3
+
+   17 command: VARIABLE . ASSIGN expression SEMICOLON
+   26 expression: VARIABLE .
+
+    ASSIGN  shift, and go to state 15
+
+    $default  reduce using rule 26 (expression)
+
+
+State 4
+
+    6 statement: WHILE . '(' expression LESS expression ')' '{' statement '}'
+
+    '('  shift, and go to state 16
+
+
+State 5
+
+    4 statement: IF . '(' expression EQ expression ')' '{' group_command '}'
+    5          | IF . '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}'
+
+    '('  shift, and go to state 17
+
+
+State 6
+
+   11 command: PRINT . MSG SEMICOLON
+   12        | PRINT . MSG NEWLINE SEMICOLON
+   13        | PRINT . expression SEMICOLON
+   14        | PRINT . expression NEWLINE SEMICOLON
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    MSG       shift, and go to state 19
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 20
+
+
+State 7
+
+   15 command: PRINT_HEX . expression SEMICOLON
+   16        | PRINT_HEX . expression NEWLINE SEMICOLON
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 21
+
+
+State 8
+
+   23 expression: '-' . expression
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 22
+
+
+State 9
+
+   24 expression: '(' . expression ')'
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 23
+
+
+State 10
+
+    0 $accept: prog . $end
+    2 prog: prog . statement
+
+    $end       shift, and go to state 24
+    error      shift, and go to state 1
+    NUMBER     shift, and go to state 2
+    VARIABLE   shift, and go to state 3
+    WHILE      shift, and go to state 4
+    IF         shift, and go to state 5
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+    '-'        shift, and go to state 8
+    '('        shift, and go to state 9
+
+    statement      go to state 25
+    group_command  go to state 12
+    command        go to state 13
+    expression     go to state 14
+
+
+State 11
+
+    1 prog: statement .
+   10 group_command: statement . command
+
+    VARIABLE   shift, and go to state 26
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+
+    VARIABLE   [reduce using rule 1 (prog)]
+    PRINT      [reduce using rule 1 (prog)]
+    PRINT_HEX  [reduce using rule 1 (prog)]
+    $default   reduce using rule 1 (prog)
+
+    command  go to state 27
+
+
+State 12
+
+    7 statement: group_command .
+
+    $default  reduce using rule 7 (statement)
+
+
+State 13
+
+    9 group_command: command .
+
+    $default  reduce using rule 9 (group_command)
+
+
+State 14
+
+    3 statement: expression . SEMICOLON
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    SEMICOLON  shift, and go to state 28
+    '+'        shift, and go to state 29
+    '-'        shift, and go to state 30
+    '*'        shift, and go to state 31
+    '/'        shift, and go to state 32
+    '\\'       shift, and go to state 33
+
+
+State 15
+
+   17 command: VARIABLE ASSIGN . expression SEMICOLON
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 34
+
+
+State 16
+
+    6 statement: WHILE '(' . expression LESS expression ')' '{' statement '}'
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 35
+
+
+State 17
+
+    4 statement: IF '(' . expression EQ expression ')' '{' group_command '}'
+    5          | IF '(' . expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}'
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 36
+
+
+State 18
+
+   26 expression: VARIABLE .
+
+    $default  reduce using rule 26 (expression)
+
+
+State 19
+
+   11 command: PRINT MSG . SEMICOLON
+   12        | PRINT MSG . NEWLINE SEMICOLON
+
+    SEMICOLON  shift, and go to state 37
+    NEWLINE    shift, and go to state 38
+
+
+State 20
+
+   13 command: PRINT expression . SEMICOLON
+   14        | PRINT expression . NEWLINE SEMICOLON
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    SEMICOLON  shift, and go to state 39
+    NEWLINE    shift, and go to state 40
+    '+'        shift, and go to state 29
+    '-'        shift, and go to state 30
+    '*'        shift, and go to state 31
+    '/'        shift, and go to state 32
+    '\\'       shift, and go to state 33
+
+
+State 21
+
+   15 command: PRINT_HEX expression . SEMICOLON
+   16        | PRINT_HEX expression . NEWLINE SEMICOLON
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    SEMICOLON  shift, and go to state 41
+    NEWLINE    shift, and go to state 42
+    '+'        shift, and go to state 29
+    '-'        shift, and go to state 30
+    '*'        shift, and go to state 31
+    '/'        shift, and go to state 32
+    '\\'       shift, and go to state 33
+
+
+State 22
+
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+   23           | '-' expression .
+
+    $default  reduce using rule 23 (expression)
+
+
+State 23
+
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+   24           | '(' expression . ')'
+
+    '+'   shift, and go to state 29
+    '-'   shift, and go to state 30
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+    ')'   shift, and go to state 43
+
+
+State 24
+
+    0 $accept: prog $end .
+
+    $default  accept
+
+
+State 25
+
+    2 prog: prog statement .
+   10 group_command: statement . command
+
+    VARIABLE   shift, and go to state 26
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+
+    VARIABLE   [reduce using rule 2 (prog)]
+    PRINT      [reduce using rule 2 (prog)]
+    PRINT_HEX  [reduce using rule 2 (prog)]
+    $default   reduce using rule 2 (prog)
+
+    command  go to state 27
+
+
+State 26
+
+   17 command: VARIABLE . ASSIGN expression SEMICOLON
+
+    ASSIGN  shift, and go to state 15
+
+
+State 27
+
+   10 group_command: statement command .
+
+    $default  reduce using rule 10 (group_command)
+
+
+State 28
+
+    3 statement: expression SEMICOLON .
+
+    $default  reduce using rule 3 (statement)
+
+
+State 29
+
+   18 expression: expression '+' . expression
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 44
+
+
+State 30
+
+   19 expression: expression '-' . expression
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 45
+
+
+State 31
+
+   20 expression: expression '*' . expression
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 46
+
+
+State 32
+
+   21 expression: expression '/' . expression
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 47
+
+
+State 33
+
+   22 expression: expression '\\' . expression
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 48
+
+
+State 34
+
+   17 command: VARIABLE ASSIGN expression . SEMICOLON
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    SEMICOLON  shift, and go to state 49
+    '+'        shift, and go to state 29
+    '-'        shift, and go to state 30
+    '*'        shift, and go to state 31
+    '/'        shift, and go to state 32
+    '\\'       shift, and go to state 33
+
+
+State 35
+
+    6 statement: WHILE '(' expression . LESS expression ')' '{' statement '}'
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    LESS  shift, and go to state 50
+    '+'   shift, and go to state 29
+    '-'   shift, and go to state 30
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+
+
+State 36
+
+    4 statement: IF '(' expression . EQ expression ')' '{' group_command '}'
+    5          | IF '(' expression . EQ expression ')' '{' group_command '}' ELSE '{' group_command '}'
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    EQ    shift, and go to state 51
+    '+'   shift, and go to state 29
+    '-'   shift, and go to state 30
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+
+
+State 37
+
+   11 command: PRINT MSG SEMICOLON .
+
+    $default  reduce using rule 11 (command)
+
+
+State 38
+
+   12 command: PRINT MSG NEWLINE . SEMICOLON
+
+    SEMICOLON  shift, and go to state 52
+
+
+State 39
+
+   13 command: PRINT expression SEMICOLON .
+
+    $default  reduce using rule 13 (command)
+
+
+State 40
+
+   14 command: PRINT expression NEWLINE . SEMICOLON
+
+    SEMICOLON  shift, and go to state 53
+
+
+State 41
+
+   15 command: PRINT_HEX expression SEMICOLON .
+
+    $default  reduce using rule 15 (command)
+
+
+State 42
+
+   16 command: PRINT_HEX expression NEWLINE . SEMICOLON
+
+    SEMICOLON  shift, and go to state 54
+
+
+State 43
+
+   24 expression: '(' expression ')' .
+
+    $default  reduce using rule 24 (expression)
+
+
+State 44
+
+   18 expression: expression . '+' expression
+   18           | expression '+' expression .
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+
+    $default  reduce using rule 18 (expression)
+
+
+State 45
+
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   19           | expression '-' expression .
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+
+    $default  reduce using rule 19 (expression)
+
+
+State 46
+
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   20           | expression '*' expression .
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    $default  reduce using rule 20 (expression)
+
+
+State 47
+
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   21           | expression '/' expression .
+   22           | expression . '\\' expression
+
+    $default  reduce using rule 21 (expression)
+
+
+State 48
+
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+   22           | expression '\\' expression .
+
+    $default  reduce using rule 22 (expression)
+
+
+State 49
+
+   17 command: VARIABLE ASSIGN expression SEMICOLON .
+
+    $default  reduce using rule 17 (command)
+
+
+State 50
+
+    6 statement: WHILE '(' expression LESS . expression ')' '{' statement '}'
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 55
+
+
+State 51
+
+    4 statement: IF '(' expression EQ . expression ')' '{' group_command '}'
+    5          | IF '(' expression EQ . expression ')' '{' group_command '}' ELSE '{' group_command '}'
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 18
+    '-'       shift, and go to state 8
+    '('       shift, and go to state 9
+
+    expression  go to state 56
+
+
+State 52
+
+   12 command: PRINT MSG NEWLINE SEMICOLON .
+
+    $default  reduce using rule 12 (command)
+
+
+State 53
+
+   14 command: PRINT expression NEWLINE SEMICOLON .
+
+    $default  reduce using rule 14 (command)
+
+
+State 54
+
+   16 command: PRINT_HEX expression NEWLINE SEMICOLON .
+
+    $default  reduce using rule 16 (command)
+
+
+State 55
+
+    6 statement: WHILE '(' expression LESS expression . ')' '{' statement '}'
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    '+'   shift, and go to state 29
+    '-'   shift, and go to state 30
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+    ')'   shift, and go to state 57
+
+
+State 56
+
+    4 statement: IF '(' expression EQ expression . ')' '{' group_command '}'
+    5          | IF '(' expression EQ expression . ')' '{' group_command '}' ELSE '{' group_command '}'
+   18 expression: expression . '+' expression
+   19           | expression . '-' expression
+   20           | expression . '*' expression
+   21           | expression . '/' expression
+   22           | expression . '\\' expression
+
+    '+'   shift, and go to state 29
+    '-'   shift, and go to state 30
+    '*'   shift, and go to state 31
+    '/'   shift, and go to state 32
+    '\\'  shift, and go to state 33
+    ')'   shift, and go to state 58
+
+
+State 57
+
+    6 statement: WHILE '(' expression LESS expression ')' . '{' statement '}'
+
+    '{'  shift, and go to state 59
+
+
+State 58
+
+    4 statement: IF '(' expression EQ expression ')' . '{' group_command '}'
+    5          | IF '(' expression EQ expression ')' . '{' group_command '}' ELSE '{' group_command '}'
+
+    '{'  shift, and go to state 60
+
+
+State 59
+
+    6 statement: WHILE '(' expression LESS expression ')' '{' . statement '}'
+
+    error      shift, and go to state 1
+    NUMBER     shift, and go to state 2
+    VARIABLE   shift, and go to state 3
+    WHILE      shift, and go to state 4
+    IF         shift, and go to state 5
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+    '-'        shift, and go to state 8
+    '('        shift, and go to state 9
+
+    statement      go to state 61
+    group_command  go to state 12
+    command        go to state 13
+    expression     go to state 14
+
+
+State 60
+
+    4 statement: IF '(' expression EQ expression ')' '{' . group_command '}'
+    5          | IF '(' expression EQ expression ')' '{' . group_command '}' ELSE '{' group_command '}'
+
+    error      shift, and go to state 1
+    NUMBER     shift, and go to state 2
+    VARIABLE   shift, and go to state 3
+    WHILE      shift, and go to state 4
+    IF         shift, and go to state 5
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+    '-'        shift, and go to state 8
+    '('        shift, and go to state 9
+
+    statement      go to state 62
+    group_command  go to state 63
+    command        go to state 13
+    expression     go to state 14
+
+
+State 61
+
+    6 statement: WHILE '(' expression LESS expression ')' '{' statement . '}'
+   10 group_command: statement . command
+
+    VARIABLE   shift, and go to state 26
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+    '}'        shift, and go to state 64
+
+    command  go to state 27
+
+
+State 62
+
+   10 group_command: statement . command
+
+    VARIABLE   shift, and go to state 26
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+
+    command  go to state 27
+
+
+State 63
+
+    4 statement: IF '(' expression EQ expression ')' '{' group_command . '}'
+    5          | IF '(' expression EQ expression ')' '{' group_command . '}' ELSE '{' group_command '}'
+    7          | group_command .
+
+    '}'  shift, and go to state 65
+
+    $default  reduce using rule 7 (statement)
+
+
+State 64
+
+    6 statement: WHILE '(' expression LESS expression ')' '{' statement '}' .
+
+    $default  reduce using rule 6 (statement)
+
+
+State 65
+
+    4 statement: IF '(' expression EQ expression ')' '{' group_command '}' .
+    5          | IF '(' expression EQ expression ')' '{' group_command '}' . ELSE '{' group_command '}'
+
+    ELSE  shift, and go to state 66
+
+    $default  reduce using rule 4 (statement)
+
+
+State 66
+
+    5 statement: IF '(' expression EQ expression ')' '{' group_command '}' ELSE . '{' group_command '}'
+
+    '{'  shift, and go to state 67
+
+
+State 67
+
+    5 statement: IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' . group_command '}'
+
+    error      shift, and go to state 1
+    NUMBER     shift, and go to state 2
+    VARIABLE   shift, and go to state 3
+    WHILE      shift, and go to state 4
+    IF         shift, and go to state 5
+    PRINT      shift, and go to state 6
+    PRINT_HEX  shift, and go to state 7
+    '-'        shift, and go to state 8
+    '('        shift, and go to state 9
+
+    statement      go to state 62
+    group_command  go to state 68
+    command        go to state 13
+    expression     go to state 14
+
+
+State 68
+
+    5 statement: IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command . '}'
+    7          | group_command .
+
+    '}'  shift, and go to state 69
+
+    $default  reduce using rule 7 (statement)
+
+
+State 69
+
+    5 statement: IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}' .
+
+    $default  reduce using rule 5 (statement)

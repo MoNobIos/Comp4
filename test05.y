@@ -87,7 +87,7 @@ FILE *file;
 %nonassoc IFX
 %nonassoc ELSE
 
-%type<val> statement 
+%type<val> statement
 %type<str> VARIABLE MSG NUMBER expression
 
 
@@ -102,12 +102,11 @@ statement :	expression SEMICOLON					{  }
 	| IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}' { asm_if((char*)$3,(char*)$5);  }
 	| WHILE '(' expression LESS expression ')' '{' statement '}'			{ asm_loop((char*)$3,(char*)$5); }
 	| group_command 			{}
-	| statement group_command	{}
 	| error 							{ yyerror(); }
 	;
 
 group_command : command		{}
-	| group_command command 		{}
+	| statement command		{}
 	;
 
 command :  PRINT MSG SEMICOLON						{ asm_print_alloc((char*)$2); asm_print_string((char*)$2); }
@@ -196,7 +195,7 @@ void asm_assign(char* var,char* val){
 }
 
 void asm_statement(){
-	
+
 	/* write all statement to file */
 	fprintf(file,"%s",temp_state);
 
@@ -570,7 +569,7 @@ void asm_if(char* a,char* b){
 	strcat(temp_string,"_FALSE:\n");
 	strcat(temp_string,temp_state_else);
 	strcat(temp_string,"\n");
-	
+
 	/* END */
 	strcat(temp_string,"\nNEXT_STATE_IF_");
 	strcat(temp_string,num_if);
@@ -580,21 +579,21 @@ void asm_if(char* a,char* b){
 	strcat(temp_state,temp_string);
 
 	strcpy(temp_state,temp_string);
-	
+
 
 	/* reset value */
 	check_else = 0;
-	
+
 	for(i=0 ; i<255 ; i++){
 		temp_condition_if[i]=0;
-	} 
+	}
 }
 
 void asm_print_string(char *msg){
 	char temp_str[255];
 	char num[2];
 	sprintf(num,"%d",count_string-1);
-	
+
 	strcpy(temp_str,"\tmov\trdi,string_");
 	strcat(temp_str,num);
 	strcat(temp_str,"\n");
@@ -649,7 +648,7 @@ void asm_print_exp(char* num){
 		strcat(temp_state,temp_string);
 	}
 	else strcat(temp_state_else,temp_string);
-	
+
 }
 
 void asm_print_exp_newline(char* num){
@@ -691,7 +690,7 @@ void asm_print_exp_newline(char* num){
 		strcat(temp_state,temp_string);
 	}
 	else strcat(temp_state_else,temp_string);
-	
+
 }
 
 void asm_print_hex(char* num){
@@ -733,7 +732,7 @@ void asm_print_hex(char* num){
 		strcat(temp_state,temp_string);
 	}
 	else strcat(temp_state_else,temp_string);
-	
+
 }
 
 void asm_print_hex_newline(char* num){
@@ -775,7 +774,7 @@ void asm_print_hex_newline(char* num){
 		strcat(temp_state,temp_string);
 	}
 	else strcat(temp_state_else,temp_string);
-	
+
 }
 
 void asm_print_alloc(char *msg){
