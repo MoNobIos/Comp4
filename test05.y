@@ -98,9 +98,9 @@ prog : statement							{ asm_statement();}
 	;
 
 statement :	expression SEMICOLON					{  }
-	| IF '(' expression EQ expression ')' '{' group_command '}' %prec IFX		{asm_if((char*)$3,(char*)$5);}
-	| IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}' { asm_if((char*)$3,(char*)$5);  }
-	| WHILE '(' expression LESS expression ')' '{' statement '}'			{ asm_loop((char*)$3,(char*)$5); }
+	| IF '(' expression EQ expression ')' '{' group_command '}' %prec IFX										{ asm_if((char*)$3,(char*)$5); }
+	| IF '(' expression EQ expression ')' '{' group_command '}' ELSE '{' group_command '}' 	{ asm_if((char*)$3,(char*)$5); }
+	| WHILE '(' expression LESS expression ')' '{' statement '}'														{ asm_loop((char*)$3,(char*)$5); }
 	| group_command 			{}
 	| error 							{ yyerror(); }
 	;
@@ -109,23 +109,23 @@ group_command : command		{}
 	| statement command		{}
 	;
 
-command :  PRINT MSG SEMICOLON						{ asm_print_alloc((char*)$2); asm_print_string((char*)$2); }
-	| PRINT MSG NEWLINE SEMICOLON 					{ asm_print_alloc_newline((char*)$2); asm_print_string((char*)$2); }
-	| PRINT expression SEMICOLON 					{ asm_print_exp($2);  }
-	| PRINT expression NEWLINE SEMICOLON 					{ asm_print_exp_newline($2);  }
-	| PRINT_HEX expression SEMICOLON 					{ asm_print_hex($2);  }
-	| PRINT_HEX expression NEWLINE SEMICOLON 					{ asm_print_hex_newline($2);  }
-	| VARIABLE ASSIGN expression SEMICOLON				{ asm_assign((char*)$1,(char*)$3); }
+command :  PRINT MSG SEMICOLON							{ asm_print_alloc((char*)$2); asm_print_string((char*)$2); }
+	| PRINT MSG NEWLINE SEMICOLON 						{ asm_print_alloc_newline((char*)$2); asm_print_string((char*)$2); }
+	| PRINT expression SEMICOLON 							{ asm_print_exp($2); }
+	| PRINT expression NEWLINE SEMICOLON 			{ asm_print_exp_newline($2); }
+	| PRINT_HEX expression SEMICOLON 					{ asm_print_hex($2); }
+	| PRINT_HEX expression NEWLINE SEMICOLON 	{ asm_print_hex_newline($2); }
+	| VARIABLE ASSIGN expression SEMICOLON		{ asm_assign((char*)$1,(char*)$3); }
 
-expression : expression '+' expression		{ $$ = "pop"; asm_add($1,$3); }
-	| expression '-' expression 		{ $$ = "pop"; asm_sub($1,$3); }
-	| expression '*' expression 		{ $$ = "pop"; asm_mul((char*)$1,(char*)$3); }
-	| expression '/' expression 		{ $$ = "pop"; asm_div((char*)$1,(char*)$3); ; }
-	| expression '\\' expression 		{ $$ = "pop"; asm_mod((char*)$1,(char*)$3); }
-	| '-' expression %prec UMINUS		{ $$ = minus($2); 	printf("t %s\n",$$);}
-	| '(' expression ')'			{ $$ = "pop"; }
-	| NUMBER				{ $$ = (char*)$1; }
-	| VARIABLE 				{ $$ = (char*)$1; }
+expression : expression '+' expression			{ $$ = "pop"; asm_add($1,$3); }
+	| expression '-' expression 							{ $$ = "pop"; asm_sub($1,$3); }
+	| expression '*' expression 							{ $$ = "pop"; asm_mul((char*)$1,(char*)$3); }
+	| expression '/' expression 							{ $$ = "pop"; asm_div((char*)$1,(char*)$3); ; }
+	| expression '\\' expression 							{ $$ = "pop"; asm_mod((char*)$1,(char*)$3); }
+	| '-' expression %prec UMINUS							{ $$ = minus($2); printf("t %s\n",$$); }
+	| '(' expression ')'											{ $$ = "pop"; }
+	| NUMBER																	{ $$ = (char*)$1; }
+	| VARIABLE 																{ $$ = (char*)$1; }
 	;
 %%
 
