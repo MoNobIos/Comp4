@@ -204,8 +204,9 @@ void asm_statement(){
 }
 
 void asm_add(char* a,char* b){
+	printf("asm_add called\n");
 	char* pop = "pop";
-	strcat(temp_exp,"\t\t;add\n");
+	strcpy(temp_exp,"\t\t;add\n");
 	/* load a */
 	if(strcmp(a,pop)==0){
 		strcat(temp_exp,"\tmov rax,[array+8*r8]\n");
@@ -243,7 +244,6 @@ void asm_add(char* a,char* b){
 	strcat(temp_exp,"\t\t;push\n");
 	strcat(temp_exp,"\tadd r8,1\n");
 	strcat(temp_exp,"\tmov [array+8*r8],rax\n");
-
 	if(check_else==0){
 		strcat(temp_state,temp_exp);
 	}
@@ -254,12 +254,15 @@ void asm_add(char* a,char* b){
 }
 
 void asm_sub(char* a,char* b){
+	printf("asm_sub Called\n");
 	char* pop = "pop";
-	strcat(temp_exp,"\t\t;sub\n");
+	int count=0;
+	strcpy(temp_exp,"\t\t;sub\n");
 	/* load a */
 	if(strcmp(a,pop)==0){
 		strcat(temp_exp,"\tmov rax,[array+8*r8]\n");
 		strcat(temp_exp,"\tsub r8,1\n");
+		count++;
 	}
 	else if((a[0]>='0' && a[0]<='9') || (a[0]=='-')){
 		strcat(temp_exp,"\tmov rax,");
@@ -276,6 +279,7 @@ void asm_sub(char* a,char* b){
 	if(strcmp(b,pop)==0){
 		strcat(temp_exp,"\tmov r10,[array+8*r8]\n");
 		strcat(temp_exp,"\tsub r8,1\n");
+		count++;
 	}
 	else if((b[0]>='0' && b[0]<='9') || (b[0]=='-')){
 		strcat(temp_exp,"\tmov r10,");
@@ -287,9 +291,14 @@ void asm_sub(char* a,char* b){
 		strcat(temp_exp,b);
 		strcat(temp_exp,"]\n");
 	}
-
+	if(count==2){
+		strcat(temp_exp,"\tsub r10,rax\n");
+		strcat(temp_exp,"\tmov rax,r10\n");
+	}
+	else{
 	/* op */
-	strcat(temp_exp,"\tsub rax,r10\n");
+		strcat(temp_exp,"\tsub rax,r10\n");
+	}
 	strcat(temp_exp,"\t\t;push\n");
 	strcat(temp_exp,"\tadd r8,1\n");
 	strcat(temp_exp,"\tmov [array+8*r8],rax\n");
@@ -303,8 +312,10 @@ void asm_sub(char* a,char* b){
 }
 
 void asm_mul(char* a,char* b){
+	printf("asm_mul Called\n");
 	char* pop = "pop";
-	strcat(temp_exp,"\t\t;mul\n");
+	strcpy(temp_exp,"\t\t;mul\n");
+
 	/* load a */
 	if(strcmp(a,pop)==0){
 		strcat(temp_exp,"\tmov rax,[array+8*r8]\n");
@@ -342,7 +353,6 @@ void asm_mul(char* a,char* b){
 	strcat(temp_exp,"\t\t;push\n");
 	strcat(temp_exp,"\tadd r8,1\n");
 	strcat(temp_exp,"\tmov [array+8*r8],rax\n");
-
 	if(check_else==0){
 		strcat(temp_state,temp_exp);
 	}
@@ -352,8 +362,9 @@ void asm_mul(char* a,char* b){
 }
 
 void asm_div(char* a,char* b){
+	printf("asm_div Called\n");
 	char* pop = "pop";
-	strcat(temp_exp,"\t\t;div\n");
+	strcpy(temp_exp,"\t\t;div\n");
 	/* load a */
 	if(strcmp(a,pop)==0){
 		strcat(temp_exp,"\tmov rax,[array+8*r8]\n");
@@ -402,8 +413,9 @@ void asm_div(char* a,char* b){
 }
 
 void asm_mod(char* a,char* b){
+	printf("asm_mod Called\n");
 	char* pop = "pop";
-	strcat(temp_exp,"\t\t;nod\n");
+	strcpy(temp_exp,"\t\t;nod\n");
 	/* load a */
 	if(strcmp(a,pop)==0){
 		strcat(temp_exp,"\tmov rax,[array+8*r8]\n");
