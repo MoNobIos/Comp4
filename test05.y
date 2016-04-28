@@ -456,6 +456,12 @@ void asm_mod(char* a,char* b){
 	strcat(temp_exp,"\t\t;push\n");
 	strcat(temp_exp,"\tadd r8,1\n");
 	strcat(temp_exp,"\tmov [array+8*r8],rax\n");
+	if(check_else==0){
+		strcat(temp_state,temp_exp);
+	}
+	else{
+		strcat(temp_state_else,temp_exp);
+	}
 }
 
 void asm_loop(char* a,char* b){
